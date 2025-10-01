@@ -256,7 +256,7 @@ The app uses a Vercel serverless function to proxy API calls and avoid CORS issu
 // api/races.ts - Vercel serverless function
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Proxy request to Neds API with proper CORS headers
-  const response = await fetch('https://api.neds.com.au/rest/v1/racing/?method=nextraces&count=50')
+  const response = await fetch('<ENDPOINT_HERE>')
   const data = await response.json()
 
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -276,5 +276,3 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 ## 📄 License
 
 This project is part of a technical assessment and is for demonstration purposes.
-
-# Entain-test-app

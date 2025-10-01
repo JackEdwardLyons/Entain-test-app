@@ -13,13 +13,15 @@ import { useQuery } from '@tanstack/vue-query'
  * @returns Vue Query object with race data, loading state, and error handling
  */
 export default function useFetchNedsRaces(count = 50) {
-  // Use the Vercel API route instead of direct Neds API call
-  const endpoint = '/api/races'
+  // Use direct API call for local development, proxy for production
+  const endpoint = import.meta.env.DEV ? import.meta.env.VITE_NEDS_API_URL : '/api/races'
 
   return useQuery({
     queryKey: ['races'],
     queryFn: async () => {
-      const response = await fetch(`${endpoint}?count=${count}`)
+      const url = import.meta.env.DEV ? `${endpoint}&count=${count}` : `${endpoint}?count=${count}`
+
+      const response = await fetch(url)
       const data = await response.json()
       return data
     },
@@ -29,9 +31,6 @@ export default function useFetchNedsRaces(count = 50) {
     select: (d: any) => {
       return d?.data?.race_summaries ?? {}
     },
-
-    // Provide empty object as placeholder to avoid undefined during initial load
-    placeholderData: () => ({}),
 
     // Refetch every 30 seconds to keep data fresh
     refetchInterval: 30000,
