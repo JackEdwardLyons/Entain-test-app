@@ -1,23 +1,25 @@
 import { useQuery } from '@tanstack/vue-query'
 
 /**
- * Composable for fetching race data from the Neds API
+ * Composable for fetching race data from the Neds API via proxy
  *
  * This composable handles the API call to retrieve upcoming races and provides
  * reactive data management through Vue Query. It fetches a configurable number
  * of races to ensure we have enough data for filtering by category.
  *
+ * Uses a Vercel serverless function to proxy requests and bypass CORS restrictions.
+ *
  * @param count - Number of races to fetch from the API (default: 50)
  * @returns Vue Query object with race data, loading state, and error handling
  */
 export default function useFetchNedsRaces(count = 50) {
-  // Get the API endpoint from environment variables
-  const endpoint = import.meta.env.VITE_NEDS_API_URL
+  // Use the Vercel API route instead of direct Neds API call
+  const endpoint = '/api/races'
 
   return useQuery({
     queryKey: ['races'],
     queryFn: async () => {
-      const response = await fetch(`${endpoint}&count=${count}`)
+      const response = await fetch(`${endpoint}?count=${count}`)
       const data = await response.json()
       return data
     },
@@ -30,5 +32,8 @@ export default function useFetchNedsRaces(count = 50) {
 
     // Provide empty object as placeholder to avoid undefined during initial load
     placeholderData: () => ({}),
+
+    // Refetch every 30 seconds to keep data fresh
+    refetchInterval: 30000,
   })
 }

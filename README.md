@@ -242,10 +242,27 @@ The app uses SCSS with scoped styles and follows a component-based approach. Key
 
 The app integrates with the Neds API to fetch race data:
 
-- **Endpoint**: Configurable via environment variables
+- **Proxy Endpoint**: Uses Vercel serverless function (`/api/races`) to bypass CORS
 - **Data Format**: Handles both array and object responses
 - **Caching**: Vue Query provides automatic caching and refetching
 - **Error Handling**: Graceful error states and loading indicators
+- **Auto-refresh**: Data refreshes every 30 seconds to stay current
+
+### CORS Solution
+
+The app uses a Vercel serverless function to proxy API calls and avoid CORS issues:
+
+```typescript
+// api/races.ts - Vercel serverless function
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Proxy request to Neds API with proper CORS headers
+  const response = await fetch('https://api.neds.com.au/rest/v1/racing/?method=nextraces&count=50')
+  const data = await response.json()
+
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.status(200).json(data)
+}
+```
 
 ## 🤝 Contributing
 
@@ -259,4 +276,5 @@ The app integrates with the Neds API to fetch race data:
 ## 📄 License
 
 This project is part of a technical assessment and is for demonstration purposes.
+
 # Entain-test-app
