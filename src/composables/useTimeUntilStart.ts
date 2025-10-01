@@ -20,7 +20,7 @@ export default function useTimeUntilStart(raceStart: number, raceEndCallback?: F
   if (!raceStart) return 'Start time unavailable.'
 
   const timeUntilStart = ref('')
-  let intervalId: number | null = null
+  let intervalId: ReturnType<typeof setInterval> | null = null
 
   /**
    * Updates the countdown display based on current time
