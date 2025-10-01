@@ -30,12 +30,21 @@ const badgeVariant = computed(() => {
 
 <template>
   <div class="race-countdown">
+    <h5 class="race-countdown-title" v-if="timeUntilStart !== 'Race Started'">Starting in:</h5>
     <wa-badge :variant="badgeVariant" attention="pulse" pill>{{ timeUntilStart }}</wa-badge>
   </div>
 </template>
 
 <style scoped lang="scss">
 .race-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   font-size: 1.5rem;
+
+  &-title {
+    margin: 0.5rem;
+  }
 }
 </style>
